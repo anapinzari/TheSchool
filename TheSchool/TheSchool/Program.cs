@@ -158,10 +158,40 @@ namespace TheSchool
 			Administrator administrator = new Administrator("Kiriyshka", "Pinzari", "6754209002322", "Chisinau, 3/1 Tecuci, flat 154",
 				"060066599", 12580);
 
-            School school = new School(teachers, groups, administrator);			
+            School school = new School(teachers, groups, administrator);
+
+			float[] avgMarks = CalculateAvgMarksForStudents(students, groups, school);
 
 			Console.ReadKey();
-		}		
+		}
+
+		private static float[] CalculateAvgMarksForStudents(Student[] students, Group[] groups, Models.School school)
+		{
+			var index = 0;
+			var avgMarks = new float[students.Length];
+			for (int i = 0; i < school.Groups.Length; i++)
+			{
+				for (int j = 0; j < school.Groups[i].Students.Length; j++)
+				{
+					var avgMark = CalculateAvgMarkForStudent(groups[i].Students[j].Id, school.Groups[i].Register);
+					avgMarks[index] = avgMark;
+					index++;
+				}
+			}
+			return avgMarks;
+		}
+
+		private static float CalculateAvgMarkForStudent(string studentId, Register register)
+		{
+			var allMarks = register.Marks;
+			var avgMark = 0f;
+			for (int i = 0; i < allMarks.Length; i++)
+			{
+				if (allMarks[i].Student.Id != studentId) continue;
+				avgMark += allMarks[i].Value;
+			}
+			return avgMark;
+		}
 	}
 }
     
